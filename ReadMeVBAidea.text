@@ -1,0 +1,160 @@
+Visual Basic Makro 
+
+Automatisering av rapporter, og data-innsamling. 
+
+Automatiseringsfunksjon som konverterer data på PDF filer,
+                hvorav data, legger seg inn i ExCel. 
+
+    **Konvertering av PDF-data til Excel samt implementere en søkefunksjon for å finne bestemte
+    koder og tall i PDF- filer ved hjelp av VBA.  
+
+    Trenger en løsning som kan: 
+    - Ekstrahere tekst fra PDF
+    - Importere spesifikk data inn i en Excel-tabell
+    - Søke etter bestemte koder/tall i PDF-filen 
+
+    VBA har begrenset støtte for direkte PDF- håndtering, men det kan brukes
+        et eksternt verktøy som Adobe Acrobat, 
+                eller tolkningsbiblioteker som ITextSharp eller
+                    Python baserte verktøy. 
+Løsning 1: 
+
+Adobe Acrobat Pro, 
+    Bruke dets API for å lese tekst fra PDF og sette den inn i Excel. 
+    1. Aktivere Adobe PDF referanse i VBA 
+    - Åpne VBA Editor (ALT + F11)
+    - Gå til Tools -> References
+    - Merk av for Adobe Acrobat XX.0 Type Library
+
+    VBA KODE for uthenting av tekst fra PDF til lagring i Excel: 
+
+
+    Sub ExtractPDFToExcel()
+        Dim AcroApp As Object
+        Dim AcroAVDoc As Object
+        Dim AcroPDDoc As Object
+        Dim AcroHiliteList As Object
+        Dim AcroTextSelect As Object
+        Dim PageNumber As Integer
+        Dim PDFText As String
+        Dim ExcelRow As Integer
+        Dim j As Integer
+
+        ' Sett opp Adobe Acrobat- objekter 
+
+    Set AcroApp = CreateObject("AcroExch.App")
+    Set AcroAVDoc = CreateObject("AcroExch.AVDoc")
+
+        ' Åpne PDF- fil (endre filbanen etter behov)
+
+    If AcroAVDoc.Open("C:\Sti\Til\Din\Fil.pdf", "") = False Then
+        MsgBox "Kunne ikke åpne PDF-filen!", vbCritical
+        Exit Sub
+    End If
+
+    Set AcroPDDoc = AcroAVDoc.GetPDDoc()
+    ExcelRow = 1
+
+        ' Løkke gjennom alle sider
+
+    For PageNumber = 0 To AcroPDDoc.GetNumPages() - 1
+        Set AcroHiliteList = CreateObject("AcroExch.HiliteList")
+        If AcroHiliteList.Add(0, 9000) = True Then
+            Set AcroTextSelect = AcroPDDoc.CreateTextSelect(PageNumber, AcroHiliteList)
+            If Not AcroTextSelect Is Nothing Then
+            PDFText = AcroTextSelect.GetText()
+            Cells(ExcelRow, 1).Value = "Side " & PageNumber + 1
+            Cells(ExcelRow + 1, 1).Value = PDFText
+            ExcelRow = ExcelRow + 2
+        End If
+    End If
+Next PageNumber
+
+        ' Lukk PDF og rydd opp. 
+
+    AcroAVDoc.Close True
+    AcroApp.Exit
+
+    MsgBox "PDF-data importert til Excel!", vbInformation
+End Sub
+
+
+Løsning 2: 
+
+VBA + Python for PDF- tekstuttrekk og søk 
+    - Bruke Python med pdfplumber for å trekke ut tekst, 
+        og søke etter koder. 
+
+    1. Installer Python og pdfplumber
+    - Python må være installert med følgende pakker; 
+        pip install pdfplumber pandas openpyx1
+    2. Python- script for å trekke ut og søke i PDF; 
+
+Opprett en Python- fil 
+(extract_pdf.py): 
+
+import pdfplumber
+import pandas as pd
+import sys 
+
+def extract_text(pdf_path, search_term=None):
+    data = []
+
+    with pdfplumber.open(pdf_path) as pdf:
+        for i, page in enumerate(pdf.pages):
+            text = page.extract_text()
+            if text:
+                if search_term and search_term in text: 
+                    data.append([f"Side {i+1}", text])
+                elif not search_term:
+                    data.append([f"Side {i+1}", text])
+    df = pd.DataFrame(data, columns=["Side", "Innhold"])
+    df.to_excel("Ekstrahert_PDF.xlsx", index=False)
+
+if __name__ == "__main__":
+    pdf_file = sys.argv[1]
+    search_term = sys.argv[2] if len(sys.argv) > 2 else None
+    extract_text(pdf_file, search_term)
+
+    **VBA MAKRO for å kjøre Python Scriptet fra Excel; 
+
+Sub RunPythonScript()
+    Dim pdfPath As String
+    Dim searchTerm As String
+    Dim pythonExe As String
+    Dim scriptPath As String
+    Dim cmd As String 
+
+' Definer filstien til Python og scriptet 
+
+    pythonExe = """C:\Path\To\Python.exe""" 'Sett inn din Python script
+    scriptPath = """C:\Path\To\extract_pdf.py""" ' Sett inn script-path
+    pdfPath = """C:\Sti\Til\Din\Fil.pdf"""
+    searchTerm = InputBox("Skriv inn søkeord eller la feltet stå tomt for å hente all tekst:")
+
+' Bygg kommandoen
+    If searchTerm = "" Then
+        cmd = pythonExe & " " & scriptPath & " " & pdfPath
+    Else 
+        cmd = pythonExe & " " & scriptPath & " " & pdfPath & " """ & searchTerm & """"
+    End If
+
+' Kjør Python-scriptet 
+    Shell cmd, vbNormalFocus
+
+    MsgBox "Prosessen er ferdig! Sjekk 'Ekstrahert_PDF.xlsx'.", vbInformation
+End Sub 
+
+
+Løsning 3: 
+
+    Bruk av gratis Online- API 
+
+Er det ikke ønskelig å installere ekstra programvare, kan du bruke et gratis API, 
+    som pdftables.com 
+    eller tabula for å konvertere PDF til Excel. 
+
+1. Gå til https://pdftables.com/
+2. Konverter PDF til Excel 
+3. Last ned filen og automatiser behandlingen i Excel via VBA. 
+
