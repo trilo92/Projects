@@ -1,0 +1,79 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing:border-box;
+    border-style: hidden;
+    border-width: 1px;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+    
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: rgb(50, 80, 133);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    background-color: #cfffff;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgb(0, 0, 0);
+    padding: 180px;
+    width: 10px;
+    -webkit-text-fill-color: rgba(0, 0, 0, 0.87);
+}
+
+.card-header {
+    margin-bottom: 10px;
+}
+
+.logo {
+    width: auto;
+}
+
+.barcode-section {
+    margin: 20px 0;
+    height: auto;
+    width: auto;
+}
+.barcode {
+    width: auto;
+    height: auto;
+}
+.reward-info {
+    margin: 20px 0;
+    width: fit-content;
+    position: center;
+    height: fit-content;
+    
+}
+
+button {
+    background-color: #f5f5f5;
+    border: 1px solid #f5f5f5;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #f5f5f5;
+    border: 1px solid #f5f5f5;
+    color: #f5f5f5;
+}
+
+.wallet-button {
+    margin-top: 20px;
+}

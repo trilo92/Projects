@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <title>Loyalty Program</title>
+         <link rel="stylesheet" href="loyalty.css">
+         <script src="loyalty.js"></script>
+    </head>
+    <body>
+        
+        <div class="card-container">
+            <div class="card-header">
+                <img src="http://via.placeholder.com/400" alt="logo" class="logo">
+                <h1 class="title">Company Logo/ Name</h1>
+                <h2> Description "Quote"</h2>
+                <p>Loyalty Card</p>
+        </div>
+
+        <div class="barcode-section">
+            <img src="http://via.placeholder.com/400" alt="barcode" class="barcode">
+            <p>Scan this barcode to register your purchase!</p>
+        </div>
+
+        <div class="reward-info">
+            <h3>Your rewards</h3>
+            <p id="points">0 points</p>
+            <p>Exclusive Offers</p>
+            <button id="redeem" onclick="redeemPoints()">Redeem Points</button>
+        </div>
+
+        <div class="wallet-button">
+            <button onclick="addToWallet()">Add to Wallet</button>
+        </div>
+
+        <div class="footer">
+            <p>Terms and Conditions</p>
+            <p>Privacy Policy</p>
+            <p>Contact Us</p>
+        </div>
+
+
+
+    </body>
+</html>
